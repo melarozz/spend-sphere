@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated } from "
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-// Define the types for the payment data
 type Payment = {
   id: number;
   logo: string;
@@ -18,16 +17,15 @@ type PaymentsData = {
   debts: Payment[];
 };
 
-// Explicitly define the tab value types
 type Tab = {
   name: string;
-  value: "subscriptions" | "bills" | "debts"; // Only allow these specific values
+  value: "subscriptions" | "bills" | "debts";
 };
 
 export default function RegularPayments() {
   const [selectedTab, setSelectedTab] = useState<"subscriptions" | "bills" | "debts">("subscriptions");
   const [menuVisible, setMenuVisible] = useState(false);
-  const menuAnim = useState(new Animated.Value(-250))[0]; // The initial position of the menu is hidden
+  const menuAnim = useState(new Animated.Value(-250))[0];
   const navigation = useNavigation();
 
   const handleNavigation = (screen: string) => {
@@ -37,7 +35,7 @@ export default function RegularPayments() {
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
     Animated.timing(menuAnim, {
-      toValue: menuVisible ? -250 : 0, // Slide out or slide in
+      toValue: menuVisible ? -250 : 0,
       duration: 300,
       useNativeDriver: true,
     }).start();
@@ -69,104 +67,104 @@ export default function RegularPayments() {
   const totalAmount = selectedPayments.reduce((acc, item) => acc + item.amount, 0).toFixed(2);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.topBar}>
-        <TouchableOpacity onPress={toggleMenu}>
-          <Ionicons name="menu" size={24} color="#333" />
-        </TouchableOpacity>
-        <Text style={styles.topBarText}>Regular Payments</Text>
-        <TouchableOpacity>
-          <Ionicons name="add" size={24} color="#333" />
-        </TouchableOpacity>
-      </View>
-
-      <ScrollView style={styles.content}>
-        <View style={styles.tabsWrapper}>
-          {tabs.map((tab) => (
-            <TouchableOpacity
-              key={tab.value}
-              style={[styles.tab, selectedTab === tab.value && styles.selectedTab]}
-              onPress={() => setSelectedTab(tab.value)} // Correctly typed tab.value
-            >
-              <Text style={[styles.tabText, selectedTab === tab.value && styles.selectedTabText]}>
-                {tab.name}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        <Text style={styles.amountText}>
-          Ваш ежемесячный
-        </Text>
-        <Text style={styles.amountText}>
-        платеж по {selectedTab === "subscriptions" ? "подпискам" : selectedTab === "bills" ? "счетам" : "долгам"}
-        </Text>
-
-        <Text style={styles.totalAmount}>${totalAmount}</Text>
-
-        {selectedPayments.map((payment) => (
-          <View key={payment.id} style={styles.paymentCard}>
-            <View style={styles.paymentDetails}>
-              <Text style={styles.paymentLogo}>{payment.logo}</Text>
-              <View style={styles.paymentInfo}>
-                <Text style={styles.paymentName}>{payment.name}</Text>
-                <Text style={styles.paymentAmount}>${payment.amount.toFixed(2)}</Text>
-              </View>
-              <Text style={styles.paymentDate}>{payment.date}</Text>
-              <View style={styles.paymentDateContainer}>
-                <Ionicons name="arrow-forward" size={18} color="#333" />
-              </View>
-            </View>
-          </View>
-        ))}
-
-        <View style={styles.footer}>
-          <Text style={styles.ad}>Тут могла быть ваша реклама</Text>
-        </View>
-      </ScrollView>
-      <Animated.View style={[styles.menu, { transform: [{ translateX: menuAnim }] }]}>
-        <View style={styles.menuHeader}>
-          <View style={styles.logoContainer}>
-            <View style={styles.logoCircle}>
-              <Text style={styles.logoText}>SS</Text>
-            </View>
-            <View style={styles.logoTextContainer}>
-              <Text style={styles.logoMainText}>SpendSphere</Text>
-              <Text style={styles.logoSlogan}>будь уверен</Text>
-            </View>
-          </View>
-        </View>
-        <TouchableOpacity onPress={toggleMenu} style={styles.closeButton}>
-          <Ionicons name="close" size={24} color="#ccc" />
-        </TouchableOpacity>
-        <View style={styles.profileContainer}>
-          <View style={styles.profileCircle}>
-            <Text style={styles.profilePhotoText}>A</Text>
-          </View>
-          <View style={styles.profileInfo}>
-            <Text style={styles.profileText}>Мой профиль</Text>
-            <Text style={styles.profileName}>Имя Фамилия</Text>
-          </View>
-          <TouchableOpacity style={styles.profileArrowButton}>
-            <Ionicons name="arrow-forward" size={20} color="#333" />
+      <View style={styles.container}>
+        <View style={styles.topBar}>
+          <TouchableOpacity onPress={toggleMenu}>
+            <Ionicons name="menu" size={24} color="#333" />
+          </TouchableOpacity>
+          <Text style={styles.topBarText}>Регулярные платежи</Text>
+          <TouchableOpacity>
+            <Ionicons name="add" size={24} color="#333" />
           </TouchableOpacity>
         </View>
 
-        <View style={styles.screenList}>
-          {["Главная", "Аналитика", "Регулярные платежи", "Прогноз бюджета", "Группы", "Поддержка"].map((screen, index) => (
-            <View key={index}>
-              <TouchableOpacity
-                style={styles.screenItem}
-                onPress={() => handleNavigation(screen)}>
-                <Text style={styles.screenItemText}>{screen}</Text>
-              </TouchableOpacity>
-              <View style={styles.separator} />
-            </View>
-          ))}
-        </View>
-      </Animated.View>
+        <ScrollView style={styles.content}>
+          <View style={styles.tabsWrapper}>
+            {tabs.map((tab) => (
+                <TouchableOpacity
+                    key={tab.value}
+                    style={[styles.tab, selectedTab === tab.value && styles.selectedTab]}
+                    onPress={() => setSelectedTab(tab.value)}
+                >
+                  <Text style={[styles.tabText, selectedTab === tab.value && styles.selectedTabText]}>
+                    {tab.name}
+                  </Text>
+                </TouchableOpacity>
+            ))}
+          </View>
 
-    </View>
+          <Text style={styles.amountText}>
+            Ваш ежемесячный
+          </Text>
+          <Text style={styles.amountText}>
+            платеж по {selectedTab === "subscriptions" ? "подпискам" : selectedTab === "bills" ? "счетам" : "долгам"}
+          </Text>
+
+          <Text style={styles.totalAmount}>${totalAmount}</Text>
+
+          {selectedPayments.map((payment) => (
+              <View key={payment.id} style={styles.paymentCard}>
+                <View style={styles.paymentDetails}>
+                  <Text style={styles.paymentLogo}>{payment.logo}</Text>
+                  <View style={styles.paymentInfo}>
+                    <Text style={styles.paymentName}>{payment.name}</Text>
+                    <Text style={styles.paymentAmount}>${payment.amount.toFixed(2)}</Text>
+                  </View>
+                  <Text style={styles.paymentDate}>{payment.date}</Text>
+                  <View style={styles.paymentDateContainer}>
+                    <Ionicons name="arrow-forward" size={18} color="#333" />
+                  </View>
+                </View>
+              </View>
+          ))}
+
+          <View style={styles.footer}>
+            <Text style={styles.ad}>Тут могла быть ваша реклама</Text>
+          </View>
+        </ScrollView>
+        <Animated.View style={[styles.menu, { transform: [{ translateX: menuAnim }] }]}>
+          <View style={styles.menuHeader}>
+            <View style={styles.logoContainer}>
+              <View style={styles.logoCircle}>
+                <Text style={styles.logoText}>SS</Text>
+              </View>
+              <View style={styles.logoTextContainer}>
+                <Text style={styles.logoMainText}>SpendSphere</Text>
+                <Text style={styles.logoSlogan}>будь уверен</Text>
+              </View>
+            </View>
+          </View>
+          <TouchableOpacity onPress={toggleMenu} style={styles.closeButton}>
+            <Ionicons name="close" size={24} color="#ccc" />
+          </TouchableOpacity>
+          <View style={styles.profileContainer}>
+            <View style={styles.profileCircle}>
+              <Text style={styles.profilePhotoText}>A</Text>
+            </View>
+            <View style={styles.profileInfo}>
+              <Text style={styles.profileText}>Мой профиль</Text>
+              <Text style={styles.profileName}>Имя Фамилия</Text>
+            </View>
+            <TouchableOpacity style={styles.profileArrowButton}>
+              <Ionicons name="arrow-forward" size={20} color="#333" />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.screenList}>
+            {["Главная", "Аналитика", "Регулярные платежи", "Прогноз бюджета", "Группы", "Поддержка"].map((screen, index) => (
+                <View key={index}>
+                  <TouchableOpacity
+                      style={styles.screenItem}
+                      onPress={() => handleNavigation(screen)}>
+                    <Text style={styles.screenItemText}>{screen}</Text>
+                  </TouchableOpacity>
+                  <View style={styles.separator} />
+                </View>
+            ))}
+          </View>
+        </Animated.View>
+
+      </View>
   );
 }
 
@@ -214,13 +212,13 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 16,
     color: "#333",
-    textAlign: "center", // Ensure text is centered
+    textAlign: "center",
   },
   selectedTabText: {
     fontWeight: "bold",
-    color: "#7E5CAD", // Text color stays the same when selected
-    borderBottomWidth: 2, // Adds the underline effect
-    borderBottomColor: "#7E5CAD", // Line color
+    color: "#7E5CAD",
+    borderBottomWidth: 2,
+    borderBottomColor: "#7E5CAD",
   },
   amountText: {
     alignSelf: "center",
@@ -290,7 +288,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 10,
-    zIndex: 1001, // Position it at the top-right corner of the menu
+    zIndex: 1001,
   },
   logoText: {
     color: "#fff",
@@ -383,7 +381,6 @@ const styles = StyleSheet.create({
   profileArrowButton: {
     marginLeft: "auto",
   },
-
   screenList: {
     marginTop: 10,
   },

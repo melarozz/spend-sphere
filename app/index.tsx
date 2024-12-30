@@ -4,10 +4,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { Svg, G, Path } from "react-native-svg";
 import { useNavigation } from "@react-navigation/native";
 
-// Define a type for the account names
 type AccountType = "Общий" | "Mastercard" | "Visa";
 
-// Define the structure for chart data
 interface ChartData {
   name: string;
   spend: number;
@@ -15,7 +13,6 @@ interface ChartData {
   color: string;
 }
 
-// Define the structure for monthly data
 interface MonthlyData {
   [month: string]: ChartData[];
 }
@@ -33,14 +30,11 @@ export default function Index() {
     navigation.navigate(screen as never);
   }
 
-
-  // Russian month names
   const monthNames = [
     "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь",
     "Октябрь", "Ноябрь", "Декабрь"
   ];
 
-  // Monthly data for each account
   const monthlyData: Record<AccountType, MonthlyData> = {
     Mastercard: {
       "9": [
@@ -53,11 +47,11 @@ export default function Index() {
         { name: "Зарплата", spend: 0, income: 2700, color: "#EE0ADF" },
       ],
       "10": [
-        { name: "Продукты", spend: 550, income: 0, color: "#FF6384" },
-        { name: "Транспорт", spend: 300, income: 0, color: "#36A2EB" },
-        { name: "Красота", spend: 200, income: 0, color: "#FFCE56" },
-        { name: "Здоровье", spend: 70, income: 0, color: "#4BC0C0" },
-        { name: "ЖКХ", spend: 30, income: 0, color: "#9966FF" },
+        { name: "Продукты", spend: 500, income: 0, color: "#FF6384" },
+        { name: "Транспорт", spend: 350, income: 0, color: "#36A2EB" },
+        { name: "Красота", spend: 120, income: 0, color: "#FFCE56" },
+        { name: "Здоровье", spend: 120, income: 0, color: "#4BC0C0" },
+        { name: "ЖКХ", spend: 150, income: 0, color: "#9966FF" },
         { name: "Бензин", spend: 110, income: 0, color: "#FF9F40" },
         { name: "Зарплата", spend: 0, income: 2300, color: "#EE0ADF" },
       ],
@@ -68,14 +62,11 @@ export default function Index() {
         { name: "Транспорт", spend: 360, income: 0, color: "#36A2EB" },
         { name: "Красота", spend: 150, income: 0, color: "#FFCE56" },
         { name: "Здоровье", spend: 50, income: 0, color: "#4BC0C0" },
-        { name: "ЖКХ", spend: 250, income: 0, color: "#9966FF" },
-        { name: "Бензин", spend: 100, income: 0, color: "#FF9F40" },
         { name: "Зарплата", spend: 0, income: 2200, color: "#EE0ADF" },
       ],
       "10": [
         { name: "Продукты", spend: 450, income: 0, color: "#FF6384" },
         { name: "Транспорт", spend: 400, income: 0, color: "#36A2EB" },
-        { name: "Красота", spend: 200, income: 0, color: "#FFCE56" },
         { name: "Здоровье", spend: 70, income: 0, color: "#4BC0C0" },
         { name: "ЖКХ", spend: 230, income: 0, color: "#9966FF" },
         { name: "Бензин", spend: 110, income: 0, color: "#FF9F40" },
@@ -85,7 +76,6 @@ export default function Index() {
     Общий: {}
   };
 
-  // Dynamically calculate chart data for 'Общий' account by summing spends from 'Mastercard' and 'Visa' for selected month
   const getCombinedChartData = () => {
     const MastercardData = monthlyData.Mastercard[selectedMonth.toString()] || [];
     const VisaData = monthlyData.Visa[selectedMonth.toString()] || [];
@@ -105,7 +95,7 @@ export default function Index() {
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
     Animated.timing(menuAnim, {
-      toValue: menuVisible ? -250 : 0, // Slide out or slide in
+      toValue: menuVisible ? -250 : 0,
       duration: 300,
       useNativeDriver: true,
     }).start();
@@ -114,17 +104,15 @@ export default function Index() {
 
   const chartData = selectedAccount === "Общий" ? getCombinedChartData() : monthlyData[selectedAccount][selectedMonth.toString()] || [];
 
-  // Calculate total spend for the selected account (for 'Общий', it's the sum of Mastercard and Visa)
   const totalSpend = chartData.reduce((acc, item) => acc + item.spend, 0);
   const totalIncome = chartData.reduce((acc, item) => acc + item.income, 0);
 
   const remainingMoney = totalIncome - totalSpend;
 
-  // Calculate population dynamically as a percentage of total spend
   const totalChartSpend = chartData.reduce((acc, item) => acc + item.spend, 0);
   const updatedChartData = chartData.map(item => ({
     ...item,
-    population: (item.spend / totalChartSpend) * 100, // Calculate population based on spend percentage
+    population: (item.spend / totalChartSpend) * 100,
   }));
 
   let startAngle = 0;
@@ -151,157 +139,157 @@ export default function Index() {
       startAngle = endAngle;
 
       return (
-        <G key={index}>
-          <Path
-            d={path}
-            fill="transparent"
-            stroke={item.color}
-            strokeWidth={12}
-          />
-        </G>
+          <G key={index}>
+            <Path
+                d={path}
+                fill="transparent"
+                stroke={item.color}
+                strokeWidth={12}
+            />
+          </G>
       );
     });
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.topBar}>
-        <TouchableOpacity onPress={toggleMenu}>
-          <Ionicons name="menu" size={24} color="#333" />
-        </TouchableOpacity>
-        <Text style={styles.topBarText}>Главная</Text>
-        <TouchableOpacity>
-          <Ionicons name="add" size={24} color="#333" />
-        </TouchableOpacity>
-      </View>
-
-      <ScrollView style={styles.content}>
-        <View style={styles.accountSelectorWrapper}>
-          <TouchableOpacity
-            style={styles.accountSelector}
-            onPress={() => setDropdownVisible(!dropdownVisible)}
-          >
-            <Text style={styles.selectedAccount}>{selectedAccount}</Text>
-            <Ionicons name={dropdownVisible ? "chevron-up-outline" : "chevron-down-outline"} size={20} color="#333" />
+      <View style={styles.container}>
+        <View style={styles.topBar}>
+          <TouchableOpacity onPress={toggleMenu}>
+            <Ionicons name="menu" size={24} color="#333" />
           </TouchableOpacity>
-
-          {dropdownVisible && (
-            <View style={styles.dropdown}>
-              {["Общий", "Mastercard", "Visa"].map((account, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={styles.dropdownItem}
-                  onPress={() => {
-                    setSelectedAccount(account as AccountType);
-                    setDropdownVisible(false);
-                  }}
-                >
-                  <Text style={styles.dropdownItemText}>
-                    {account === "Mastercard" ? "MasterCard *5993" : account === "Visa" ? "Visa *6790" : "Общий"}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          )}
-        </View>
-
-        <View style={styles.monthNavigation}>
-          <TouchableOpacity onPress={() => setSelectedMonth(selectedMonth === 1 ? 12 : selectedMonth - 1)}>
-            <Ionicons name="arrow-back" size={24} color="#333" />
-          </TouchableOpacity>
-          <Text style={styles.monthText}>
-            {`${monthNames[selectedMonth - 1]} ${2024}`}
-          </Text>
-          <TouchableOpacity onPress={() => setSelectedMonth(selectedMonth === 12 ? 1 : selectedMonth + 1)}>
-            <Ionicons name="arrow-forward" size={24} color="#333" />
+          <Text style={styles.topBarText}>Главная</Text>
+          <TouchableOpacity>
+            <Ionicons name="add" size={24} color="#333" />
           </TouchableOpacity>
         </View>
 
-        <View style={styles.header}>
-          <Text style={styles.amount}>${remainingMoney}</Text>
-        </View>
+        <ScrollView style={styles.content}>
+          <View style={styles.accountSelectorWrapper}>
+            <TouchableOpacity
+                style={styles.accountSelector}
+                onPress={() => setDropdownVisible(!dropdownVisible)}
+            >
+              <Text style={styles.selectedAccount}>{selectedAccount}</Text>
+              <Ionicons name={dropdownVisible ? "chevron-up-outline" : "chevron-down-outline"} size={20} color="#333" />
+            </TouchableOpacity>
 
-        <View style={styles.chartWrapper}>
-          <Svg width={300} height={300} viewBox="0 0 300 300" style={styles.chart}>
-            {renderCircleSegments()}
-          </Svg>
-
-          <View style={styles.legend}>
-            {updatedChartData
-              .filter((item) => item.spend > 0) // Filter out items with 0 spend
-              .map((item, index) => (
-                <View key={index} style={styles.legendItem}>
-                  <View style={[styles.colorBlock, { backgroundColor: item.color }]} />
-                  <Text style={styles.legendText}>{item.name}</Text>
+            {dropdownVisible && (
+                <View style={styles.dropdown}>
+                  {["Общий", "Mastercard", "Visa"].map((account, index) => (
+                      <TouchableOpacity
+                          key={index}
+                          style={styles.dropdownItem}
+                          onPress={() => {
+                            setSelectedAccount(account as AccountType);
+                            setDropdownVisible(false);
+                          }}
+                      >
+                        <Text style={styles.dropdownItemText}>
+                          {account === "Mastercard" ? "MasterCard *5993" : account === "Visa" ? "Visa *6790" : "Общий"}
+                        </Text>
+                      </TouchableOpacity>
+                  ))}
                 </View>
-              ))}
+            )}
           </View>
 
-        </View>
+          <View style={styles.monthNavigation}>
+            <TouchableOpacity onPress={() => setSelectedMonth(selectedMonth === 1 ? 12 : selectedMonth - 1)}>
+              <Ionicons name="arrow-back" size={24} color="#333" />
+            </TouchableOpacity>
+            <Text style={styles.monthText}>
+              {`${monthNames[selectedMonth - 1]} ${2024}`}
+            </Text>
+            <TouchableOpacity onPress={() => setSelectedMonth(selectedMonth === 12 ? 1 : selectedMonth + 1)}>
+              <Ionicons name="arrow-forward" size={24} color="#333" />
+            </TouchableOpacity>
+          </View>
 
-        <View style={styles.card}>
-          <View style={styles.summary}>
-            <View style={styles.summaryItem}>
-              <Text style={styles.summaryLabel}>Расходы</Text>
-              <Text style={styles.summaryValue}>${totalSpend}</Text>
-            </View>
-            <View style={styles.separatorCard} />
-            <View style={styles.summaryItem}>
-              <Text style={styles.summaryLabel}>Доходы</Text>
-              <Text style={styles.summaryValue}>${totalIncome}</Text>
-            </View>
+          <View style={styles.header}>
+            <Text style={styles.amount}>${remainingMoney}</Text>
           </View>
-        </View>
 
-        <View style={styles.footer}>
-          <Text style={styles.ad}>Тут могла быть ваша реклама</Text>
-        </View>
-      </ScrollView>
+          <View style={styles.chartWrapper}>
+            <Svg width={300} height={300} viewBox="0 0 300 300" style={styles.chart}>
+              {renderCircleSegments()}
+            </Svg>
 
-      <Animated.View style={[styles.menu, { transform: [{ translateX: menuAnim }] }]}>
-        <View style={styles.menuHeader}>
-          <View style={styles.logoContainer}>
-            <View style={styles.logoCircle}>
-              <Text style={styles.logoText}>SS</Text>
+            <View style={styles.legend}>
+              {updatedChartData
+                  .filter((item) => item.spend > 0)
+                  .map((item, index) => (
+                      <View key={index} style={styles.legendItem}>
+                        <View style={[styles.colorBlock, { backgroundColor: item.color }]} />
+                        <Text style={styles.legendText}>{item.name}</Text>
+                      </View>
+                  ))}
             </View>
-            <View style={styles.logoTextContainer}>
-              <Text style={styles.logoMainText}>SpendSphere</Text>
-              <Text style={styles.logoSlogan}>будь уверен</Text>
+
+          </View>
+
+          <View style={styles.card}>
+            <View style={styles.summary}>
+              <View style={styles.summaryItem}>
+                <Text style={styles.summaryLabel}>Расходы</Text>
+                <Text style={styles.summaryValue}>${totalSpend}</Text>
+              </View>
+              <View style={styles.separatorCard} />
+              <View style={styles.summaryItem}>
+                <Text style={styles.summaryLabel}>Доходы</Text>
+                <Text style={styles.summaryValue}>${totalIncome}</Text>
+              </View>
             </View>
           </View>
-        </View>
-        <TouchableOpacity onPress={toggleMenu} style={styles.closeButton}>
-          <Ionicons name="close" size={24} color="#ccc" />
-        </TouchableOpacity>
-        <View style={styles.profileContainer}>
-          <View style={styles.profileCircle}>
-            <Text style={styles.profilePhotoText}>A</Text>
+
+          <View style={styles.footer}>
+            <Text style={styles.ad}>Тут могла быть ваша реклама</Text>
           </View>
-          <View style={styles.profileInfo}>
-            <Text style={styles.profileText}>Мой профиль</Text>
-            <Text style={styles.profileName}>Имя Фамилия</Text>
+        </ScrollView>
+
+        <Animated.View style={[styles.menu, { transform: [{ translateX: menuAnim }] }]}>
+          <View style={styles.menuHeader}>
+            <View style={styles.logoContainer}>
+              <View style={styles.logoCircle}>
+                <Text style={styles.logoText}>SS</Text>
+              </View>
+              <View style={styles.logoTextContainer}>
+                <Text style={styles.logoMainText}>SpendSphere</Text>
+                <Text style={styles.logoSlogan}>будь уверен</Text>
+              </View>
+            </View>
           </View>
-          <TouchableOpacity style={styles.profileArrowButton}>
-            <Ionicons name="arrow-forward" size={20} color="#333" />
+          <TouchableOpacity onPress={toggleMenu} style={styles.closeButton}>
+            <Ionicons name="close" size={24} color="#ccc" />
           </TouchableOpacity>
-        </View>
-
-        <View style={styles.screenList}>
-          {["Главная", "Аналитика", "Регулярные платежи", "Прогноз бюджета", "Группы", "Поддержка"].map((screen, index) => (
-            <View key={index}>
-              <TouchableOpacity
-                style={styles.screenItem}
-                onPress={() => handleNavigation(screen)}>
-                <Text style={styles.screenItemText}>{screen}</Text>
-              </TouchableOpacity>
-              <View style={styles.separator} />
+          <View style={styles.profileContainer}>
+            <View style={styles.profileCircle}>
+              <Text style={styles.profilePhotoText}>A</Text>
             </View>
-          ))}
-        </View>
-      </Animated.View>
+            <View style={styles.profileInfo}>
+              <Text style={styles.profileText}>Мой профиль</Text>
+              <Text style={styles.profileName}>Имя Фамилия</Text>
+            </View>
+            <TouchableOpacity style={styles.profileArrowButton}>
+              <Ionicons name="arrow-forward" size={20} color="#333" />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.screenList}>
+            {["Главная", "Аналитика", "Регулярные платежи", "Прогноз бюджета", "Группы", "Поддержка"].map((screen, index) => (
+                <View key={index}>
+                  <TouchableOpacity
+                      style={styles.screenItem}
+                      onPress={() => handleNavigation(screen)}>
+                    <Text style={styles.screenItemText}>{screen}</Text>
+                  </TouchableOpacity>
+                  <View style={styles.separator} />
+                </View>
+            ))}
+          </View>
+        </Animated.View>
 
 
-    </View>
+      </View>
   );
 }
 
@@ -526,7 +514,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 10,
-    zIndex: 1001, // Position it at the top-right corner of the menu
+    zIndex: 1001,
   },
   logoText: {
     color: "#fff",

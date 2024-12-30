@@ -10,7 +10,6 @@ interface Operation {
     amount: number;
 }
 
-// Define the structure for chart data
 interface ChartData {
     name: string;
     icon: string;
@@ -20,7 +19,6 @@ interface ChartData {
     operations: Operation[];
 }
 
-// Define the structure for monthly data
 interface MonthlyData {
     [month: string]: ChartData[];
 }
@@ -37,7 +35,6 @@ export default function Analytics() {
         navigation.navigate(screen as never);
     };
 
-    // Russian month names
     const monthNames = [
         "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь",
         "Октябрь", "Ноябрь", "Декабрь",
@@ -171,6 +168,17 @@ export default function Analytics() {
                         ],
                     },
                     {
+                        name: "Красота",
+                        icon: "brush-outline",
+                        spend: 120,
+                        income: 0,
+                        color: "#FFCE56",
+                        operations: [
+                            { name: "Золотое Яблоко", amount: 100 },
+                            { name: "Косметолог", amount: 20 },
+                        ],
+                    },
+                    {
                         name: "Бензин",
                         icon: "car-sport-outline",
                         spend: 150,
@@ -185,11 +193,11 @@ export default function Analytics() {
                         name: "Зарплата",
                         icon: "cash-outline",
                         spend: 0,
-                        income: 2600,
+                        income: 2300,
                         color: "#EE0ADF",
                         operations: [
                             { name: "Оклад", amount: 2200 },
-                            { name: "Премия", amount: 400 },
+                            { name: "Премия", amount: 100 },
                         ],
                     },
                 ],
@@ -241,28 +249,6 @@ export default function Analytics() {
                     ],
                 },
                 {
-                    name: "ЖКХ",
-                    icon: "home-outline",
-                    spend: 250,
-                    income: 0,
-                    color: "#9966FF",
-                    operations: [
-                        { name: "Электричество", amount: 150 },
-                        { name: "Вода", amount: 100 },
-                    ],
-                },
-                {
-                    name: "Бензин",
-                    icon: "car-sport-outline",
-                    spend: 100,
-                    income: 0,
-                    color: "#FF9F40",
-                    operations: [
-                        { name: "АЗС Лукойл", amount: 60 },
-                        { name: "АЗС Роснефть", amount: 40 },
-                    ],
-                },
-                {
                     name: "Зарплата",
                     icon: "cash-outline",
                     spend: 0,
@@ -295,17 +281,6 @@ export default function Analytics() {
                     operations: [
                         { name: "Проездной", amount: 250 },
                         { name: "Такси", amount: 150 },
-                    ],
-                },
-                {
-                    name: "Красота",
-                    icon: "brush-outline",
-                    spend: 200,
-                    income: 0,
-                    color: "#FFCE56",
-                    operations: [
-                        { name: "Маникюр", amount: 120 },
-                        { name: "Шампунь", amount: 80 },
                     ],
                 },
                 {
@@ -345,10 +320,10 @@ export default function Analytics() {
                     name: "Зарплата",
                     icon: "cash-outline",
                     spend: 0,
-                    income: 2300,
+                    income: 3300,
                     color: "#EE0ADF",
                     operations: [
-                        { name: "Основной доход", amount: 1900 },
+                        { name: "Основной доход", amount: 2900 },
                         { name: "Подработка", amount: 400 },
                     ],
                 },
@@ -357,7 +332,6 @@ export default function Analytics() {
         Общий: {},
     };
 
-    // Combine Mastercard and Visa data for "Общий" account
     const getCombinedChartData = () => {
         const MastercardData = monthlyData.Mastercard[selectedMonth.toString()] || [];
         const VisaData = monthlyData.Visa[selectedMonth.toString()] || [];
@@ -372,13 +346,11 @@ export default function Analytics() {
             const MastercardItem = MastercardData.find((item) => item.name === categoryName);
             const VisaItem = VisaData.find((item) => item.name === categoryName);
 
-            // Combine operations from both Mastercard and Visa and group by operation name
             const allOperations = [
                 ...(MastercardItem?.operations || []),
                 ...(VisaItem?.operations || []),
             ];
 
-            // Group operations by name and sum their amounts
             const groupedOperations: { [name: string]: number } = {};
             allOperations.forEach((operation) => {
                 if (groupedOperations[operation.name]) {
@@ -388,7 +360,6 @@ export default function Analytics() {
                 }
             });
 
-            // Convert grouped operations back into the format of the original data
             const summedOperations = Object.entries(groupedOperations).map(([name, amount]) => ({
                 name,
                 amount,
@@ -413,7 +384,6 @@ export default function Analytics() {
             ? getCombinedChartData()
             : monthlyData[selectedAccount][selectedMonth.toString()] || [];
 
-    // Calculate totals
     const totalSpend = chartData.reduce((acc, item) => acc + item.spend, 0);
     const totalIncome = chartData.reduce((acc, item) => acc + item.income, 0);
     const remainingMoney = totalIncome - totalSpend;
@@ -498,7 +468,7 @@ export default function Analytics() {
                     .sort((a, b) => {
                         const totalAmountA = a.spend === 0 ? a.income : a.spend;
                         const totalAmountB = b.spend === 0 ? b.income : b.spend;
-                        return totalAmountB - totalAmountA; // Sorting categories in descending order
+                        return totalAmountB - totalAmountA;
                     })
                     .map((category) => {
                         const totalAmount = category.spend === 0 ? category.income : category.spend;
@@ -754,7 +724,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 10,
         right: 10,
-        zIndex: 1001, // Position it at the top-right corner of the menu
+        zIndex: 1001,
     },
     logoText: {
         color: "#fff",
